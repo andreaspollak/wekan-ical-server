@@ -2,6 +2,7 @@ from wekanapi import WekanApi
 import BaseHTTPServer
 import vobject
 import dateutil.parser
+import dateutil.relativedelta
 
 LISTEN_HOST = "127.0.0.1"
 LISTEN_PORT = 8091
@@ -14,6 +15,7 @@ def create_ical_event(cal, board, card, card_info):
     event = cal.add('vevent')
     event.add('summary').value = board.title + ": " + card_info['title']
     event.add('dtstart').value = dateutil.parser.parse(card_info['dueAt'])
+    event.add('dtend').value = (dateutil.parser.parse(card_info['dueAt']) + dateutil.relativedelta.relativedelta(minutes=60))
     if 'description' in card_info: event.add('description').value = card_info['description']
     event.add('url').value = WEKAN_HOST + "/b/" + board.id + "/x/" + card.id
 
